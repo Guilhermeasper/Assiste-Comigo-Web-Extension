@@ -1,0 +1,47 @@
+{
+  "name": "assiste-comigo",
+  "description": "Assista a filmes, séries e animes com quem você gosta",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "run-s dev",
+    "dev": "npm run build:ui -- --mode=development & npm run build:background -- --mode=development & npm run build:content -- --mode=development",
+    "dev:ui-only": "vite -c ./vite.config.ui.ts",
+    "watch": "npm run watch:ui & npm run watch:background & npm run watch:content",
+    "watch:ui": "npm run build:ui -- --watch --mode=development",
+    "watch:background": "npm run build:background -- --watch --mode=development",
+    "watch:content": "npm run build:content -- --watch --mode=development",
+    "clean": "rimraf dist",
+    "types:node": "tsc -P tsconfig.node.json",
+    "build": "npm run build:ui & npm run build:background & npm run build:content",
+    "prebuild": "npm run clean",
+    "build:ui": "vite build -c ./vite.config.ui.ts",
+    "build:background": "vite build -c ./vite.config.background.ts",
+    "build:content": "vite build -c ./vite.config.content.ts"
+  },
+  "dependencies": {
+    "pino": "^9.3.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.26.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.269",
+    "@types/node": "^18.15.11",
+    "@types/postcss-url": "^10.0.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^4.2.1",
+    "pino-pretty": "^11.2.2",
+    "postcss": "^8.4.21",
+    "postcss-url": "^10.1.3",
+    "rimraf": "^5.0.5",
+    "sass": "^1.60.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.11",
+    "vite-plugin-generate-file": "^0.1.1",
+    "vite-plugin-react-rich-svg": "^1.0.0",
+    "vite-plugin-singlefile": "^0.13.5"
+  }
+}
