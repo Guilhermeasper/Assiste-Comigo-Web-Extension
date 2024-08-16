@@ -1,7 +1,7 @@
 import {
   ASSISTE_COMIGO_PLATFORMS,
   ASSISTE_COMIGO_PLATFORMS_SELECTOR,
-} from 'background/platforms';
+} from '@background/platforms';
 import { Orchestrator } from '@shared/orchestrator';
 import { SessionStorage } from '@shared/storage';
 import { Handler } from '@shared/types';
