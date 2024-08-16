@@ -1,35 +1,33 @@
-import { defineConfig } from "vite";
-import path from "node:path";
-import { viteSingleFile } from "vite-plugin-singlefile";
-import react from "@vitejs/plugin-react";
-import richSvg from "vite-plugin-react-rich-svg";
-import postcssUrl from "postcss-url";
+import { defineConfig } from 'vite';
+import path from 'node:path';
+import { viteSingleFile } from 'vite-plugin-singlefile';
+import react from '@vitejs/plugin-react';
+import richSvg from 'vite-plugin-react-rich-svg';
+import postcssUrl from 'postcss-url';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [react(), richSvg()],
-  root: path.resolve("src/ui"),
+  root: path.resolve('src/ui'),
   build: {
-    minify: mode === "production",
-    cssMinify: mode === "production",
-    sourcemap: mode !== "production" ? "inline" : false,
+    minify: mode === 'production',
+    cssMinify: mode === 'production',
+    sourcemap: mode !== 'production' ? 'inline' : false,
     emptyOutDir: false,
-    outDir: path.resolve("dist"),
+    outDir: path.resolve('dist'),
     rollupOptions: {
-      input: path.resolve("src/ui/index.html"),
+      input: path.resolve('src/ui/index.html'),
     },
   },
   css: {
     postcss: {
-      plugins: [postcssUrl({ url: "inline" })],
+      plugins: [postcssUrl({ url: 'inline' })],
     },
   },
   resolve: {
     alias: {
-      "@background": path.resolve("src/plugin/background"),
-      "@content": path.resolve("src/plugin/content"),
-      "@shared": path.resolve("src/shared"),
-      "@ui": path.resolve("src/ui"),
+      '@shared': path.resolve('src/shared'),
+      '@ui': path.resolve('src/ui'),
     },
   },
 }));

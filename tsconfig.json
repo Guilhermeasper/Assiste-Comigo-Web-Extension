@@ -15,8 +15,8 @@
     "baseUrl": "src",
     "rootDir": ".",
     "paths": {
-      "@background/*": ["plugin/background/*"],
-      "@content/*": ["plugin/content/*"],
+      "@background/*": ["background/*"],
+      "@content/*": ["content/*"],
       "@shared/*": ["shared/*"],
       "@ui/*": ["ui/*"]
     }
