@@ -3,6 +3,7 @@ import App from './app';
 import NotFound from './not-found';
 import CreateSession from './create-session';
 import Error from './error';
+import InsideSession from './in-session';
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
   {
     path: '/create',
     element: <CreateSession />,
+  },
+  {
+    path: '/in-session',
+    element: <InsideSession />,
   },
   {
     path: '/error',

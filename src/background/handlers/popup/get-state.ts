@@ -68,6 +68,14 @@ export const getState: Handler = {
             }
           }
         }
+      } else {
+        return {
+          type: 'session-active',
+          payload: {
+            platform: activeSession,
+          },
+          source: 'background',
+        };
       }
     } catch (error) {
       console.error('Error getting state:', error);

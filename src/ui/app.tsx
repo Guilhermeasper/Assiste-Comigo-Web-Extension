@@ -22,6 +22,10 @@ function App() {
       navigate('/error', {
         state: { reason: 'Abra um vídeo para começar uma sessão' },
       });
+    } else if (type === 'session-active') {
+      navigate('/in-session', {
+        state: { platform: response.payload.platform },
+      });
     } else if (type == 'unsupported-platform') {
       navigate('/error', {
         state: { reason: 'Plataforma não suportada' },

@@ -9,20 +9,5 @@ export const youtube = {
 
     return onWatchPage && playerFound;
   },
-  appendListeners: (
-    onPlay: () => void,
-    onPause: () => void,
-    onSeek: () => void,
-  ) => {
-    const player = getYoutubePlayer();
-
-    if (!player) {
-      return;
-    }
-
-    player.addEventListener('play', onPlay);
-    player.addEventListener('pause', onPause);
-    player.addEventListener('seeked', onSeek);
-    console.log('youtube listeners added');
-  },
+  videoElement: getYoutubePlayer,
 };

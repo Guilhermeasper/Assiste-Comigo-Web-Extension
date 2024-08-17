@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const CreateSession: React.FC = () => {
   const [platform, setPlatform] = useState<string>('');
   const location = useLocation();
+  const navigate = useNavigate();
   const handleCreateSession = () => {
     chrome.runtime.sendMessage(
       {
@@ -13,6 +14,7 @@ const CreateSession: React.FC = () => {
       },
       (response) => {
         console.log('Session created:', response);
+        navigate('/in-session', { state: { platform } });
       },
     );
   };

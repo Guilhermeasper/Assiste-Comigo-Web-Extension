@@ -1,6 +1,7 @@
 import { Handler } from '@shared/types';
 import * as platforms from '@content/platforms';
 import { Orchestrator } from '@shared/orchestrator';
+import { AssisteComigoPlayer } from '@content/player';
 
 const orchestrator = Orchestrator.getInstance();
 
@@ -15,46 +16,7 @@ export const createSession: Handler = {
       (p) => p.name === platformName,
     );
 
-    const onPlay = (): void => {
-      try {
-        orchestrator.sendMessage(
-          'play',
-          { platform: platformName },
-          'content',
-          () => {},
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const onPause = (): void => {
-      try {
-        orchestrator.sendMessage(
-          'pause',
-          { platform: platformName },
-          'content',
-          () => {},
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const onSeek = (): void => {
-      try {
-        orchestrator.sendMessage(
-          'seek',
-          { platform: platformName },
-          'content',
-          () => {},
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    platform?.appendListeners(onPlay, onPause, onSeek);
+    AssisteComigoPlayer.getInstance(platform);
 
     return { created: true };
   },
