@@ -16,7 +16,8 @@ export const createSession: Handler = {
       (p) => p.name === platformName,
     );
 
-    AssisteComigoPlayer.getInstance(platform);
+    const player = AssisteComigoPlayer.getInstance(platform);
+    player.appendListeners();
 
     return { created: true };
   },

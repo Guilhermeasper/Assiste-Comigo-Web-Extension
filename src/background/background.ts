@@ -1,4 +1,5 @@
 import { registerHandlers } from '@background/handlers/register-handlers';
+import SocketManager from '@background/socket-manager';
 
 registerHandlers();
 
@@ -10,4 +11,6 @@ chrome.runtime.onInstalled.addListener(onInstalled);
 
 function onInstalled(details: unknown) {
   console.log('Extension successfully installed.');
+
+  const socketManager = SocketManager.getInstance();
 }

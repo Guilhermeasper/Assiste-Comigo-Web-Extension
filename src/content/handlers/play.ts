@@ -6,6 +6,7 @@ export const play: Handler = {
   origin: 'background',
   bidirectional: false,
   handler: (payload: unknown) => {
+    AssisteComigoPlayer.getInstance().serverPlay = true;
     AssisteComigoPlayer.getInstance().play();
   },
 };

@@ -6,6 +6,7 @@ export const pause: Handler = {
   origin: 'background',
   bidirectional: false,
   handler: (payload: unknown) => {
+    AssisteComigoPlayer.getInstance().serverPause = true;
     AssisteComigoPlayer.getInstance().pause();
   },
 };

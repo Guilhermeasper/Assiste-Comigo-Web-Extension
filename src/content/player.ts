@@ -5,6 +5,12 @@ export class AssisteComigoPlayer {
   orchestrator = Orchestrator.getInstance();
   platform = { name: '' };
   videoElement: HTMLVideoElement | null = null;
+  waitingServerPlay = false;
+  waitingServerPause = false;
+  waitingForSeek = false;
+  serverPlay = false;
+  serverPause = false;
+  serverSeek = false;
 
   // this class should be a singleton
   static instance: AssisteComigoPlayer;
@@ -21,10 +27,18 @@ export class AssisteComigoPlayer {
   }
 
   play() {
+    if (this.waitingServerPlay) {
+      this.waitingServerPlay = false;
+      return;
+    }
     this.videoElement?.play();
   }
 
   pause() {
+    if (this.waitingServerPause) {
+      this.waitingServerPause = false;
+      return;
+    }
     this.videoElement?.pause();
   }
 
@@ -33,6 +47,12 @@ export class AssisteComigoPlayer {
   }
 
   onPlay(): void {
+    console.log(new Date().toISOString());
+    if (this.serverPlay) {
+      this.serverPlay = false;
+      return;
+    }
+    this.waitingServerPlay = true;
     try {
       this.orchestrator.sendMessage(
         'play',
@@ -46,6 +66,11 @@ export class AssisteComigoPlayer {
   }
 
   onPause(): void {
+    if (this.serverPause) {
+      this.serverPause = false;
+      return;
+    }
+    this.waitingServerPause = true;
     try {
       this.orchestrator.sendMessage(
         'pause',

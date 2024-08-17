@@ -17,4 +17,5 @@ export default {
   background: {
     service_worker: './background.js',
   },
+  host_permissions: ['<all_urls>'],
 };

@@ -1,3 +1,4 @@
+import SocketManager from '@background/socket-manager';
 import { Orchestrator } from '@shared/orchestrator';
 import { SessionStorage } from '@shared/storage';
 import { Handler } from '@shared/types';
@@ -10,6 +11,22 @@ export const createSession: Handler = {
   bidirectional: true,
   handler: (payload: unknown) => {
     SessionStorage.set('activeSession', 'true');
+    SocketManager.getInstance().onMessage('play', () => {
+      orchestrator.sendMessageToActiveTab({
+        type: 'play',
+        payload: null,
+        source: 'background',
+      });
+    });
+
+    SocketManager.getInstance().onMessage('pause', () => {
+      orchestrator.sendMessageToActiveTab({
+        type: 'pause',
+        payload: null,
+        source: 'background',
+      });
+    });
+
     const createSessionResponse = orchestrator.sendMessageToActiveTab({
       type: 'create-session',
       payload: { platform: (payload as any)?.platform },
