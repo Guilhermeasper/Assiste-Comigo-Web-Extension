@@ -2,12 +2,16 @@ import { io, Socket } from 'socket.io-client';
 
 class SocketManager {
   private static instance: SocketManager;
-  private socket: Socket;
+  private socket: Socket | null;
 
   private constructor() {
-    this.socket = io('http://localhost:3000', { transports: ['websocket'] }); // Replace with your server URL
-    console.log(this.socket.connected);
-    this.initializeHandlers();
+    try {
+      this.socket = io('http://localhost:3000', { transports: ['websocket'] }); // Replace with your server URL
+      console.log(this.socket.connected);
+      this.initializeHandlers();
+    } catch (error) {
+      this.socket = null;
+    }
   }
 
   public static getInstance(): SocketManager {
@@ -18,16 +22,15 @@ class SocketManager {
   }
 
   private initializeHandlers(): void {
-    this.socket.on('connect', () => {
-      console.log(this.socket.connected);
+    this.socket?.on('connect', () => {
       console.log('Connected to server');
     });
 
-    this.socket.on('disconnect', () => {
+    this.socket?.on('disconnect', () => {
       console.log('Disconnected from server');
     });
 
-    this.socket.on('error', (error: any) => {
+    this.socket?.on('error', (error: any) => {
       console.error('An error occurred:', error);
     });
 
@@ -35,11 +38,11 @@ class SocketManager {
   }
 
   public sendMessage(event: string, data: any): void {
-    this.socket.emit(event, data);
+    this.socket?.emit(event, data);
   }
 
   public onMessage(event: string, handler: (data: any) => void): void {
-    this.socket.on(event, handler);
+    this.socket?.on(event, handler);
   }
 }
 

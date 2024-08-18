@@ -44,7 +44,11 @@ export class Orchestrator {
     source: Origin,
     callback: (response: AssisteComigoMessage<T>) => void,
   ) {
-    chrome.runtime.sendMessage({ type, payload, source }, callback);
+    try {
+      chrome.runtime.sendMessage({ type, payload, source }, callback);
+    } catch (error) {
+      console.error('Error occurred while sending message:', error);
+    }
   }
 
   private _messageHandler(
@@ -52,6 +56,7 @@ export class Orchestrator {
     sender: chrome.runtime.MessageSender,
     sendResponse: (response?: any) => void,
   ): void | true {
+    console.log('Received from:', sender);
     if (process.env.NODE_ENV === 'development') {
       console.debug(`Receiving ${message.type} message from ${message.source}`);
       console.debug('Message payload:', message.payload);
@@ -97,7 +102,10 @@ export class Orchestrator {
       active: true,
       lastFocusedWindow: true,
     });
-    const response = await chrome.tabs.sendMessage(tab.id as number, message);
+    const response = await chrome.tabs.sendMessage(
+      tab?.id as number | undefined,
+      message,
+    );
     return response;
   }
 }

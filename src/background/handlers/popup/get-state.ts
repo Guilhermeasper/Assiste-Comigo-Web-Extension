@@ -1,10 +1,13 @@
+import { BackgroundBaseMessage } from '@background/base-response';
 import {
   ASSISTE_COMIGO_PLATFORMS,
   ASSISTE_COMIGO_PLATFORMS_SELECTOR,
 } from '@background/platforms';
+import reloadContentScript from '@background/reload-content-script';
 import { Orchestrator } from '@shared/orchestrator';
 import { SessionStorage } from '@shared/storage';
 import { Handler } from '@shared/types';
+import { AssisteComigoMessage } from '@shared/types/message.type';
 
 const orchestrator = Orchestrator.getInstance();
 
@@ -13,77 +16,62 @@ export const getState: Handler = {
   origin: 'popup',
   bidirectional: true,
   handler: async (payload: unknown): Promise<any> => {
+    await reloadContentScript();
     try {
-      const activeSession = await SessionStorage.get<string>('activeSession');
-      console.log(activeSession);
-      if (!activeSession) {
-        const hostnameResponse = await orchestrator.sendMessageToActiveTab({
-          type: 'get-hostname',
-          payload,
-          source: 'background',
-        });
-        console.log('hostnameResponse:', hostnameResponse);
-        const hostname = hostnameResponse?.hostname;
-        if (!hostname) {
-          return {
-            type: 'unsupported-platform',
-            payload: {},
-            source: 'background',
-          };
-        } else {
-          const platform = ASSISTE_COMIGO_PLATFORMS.find((platform) =>
-            hostname.includes(platform),
-          );
+      const platform = await checkPlatformCompatibility();
+      if (!platform) return new BackgroundBaseMessage('unsupported-platform');
 
-          if (!platform) {
-            return {
-              type: 'unsupported-platform',
-              payload: {},
-              source: 'background',
-            };
-          } else {
-            const playerResponse = await orchestrator.sendMessageToActiveTab({
-              type: 'watching',
-              payload: {
-                platform,
-              },
-              source: 'background',
-            });
-            const watching = playerResponse?.watching;
-            if (!watching) {
-              return {
-                type: 'not-ready',
-                payload: {},
-                source: 'background',
-              };
-            } else {
-              return {
-                type: 'ready',
-                payload: {
-                  platform,
-                  watching,
-                },
-                source: 'background',
-              };
-            }
-          }
-        }
-      } else {
-        return {
-          type: 'session-active',
-          payload: {
-            platform: activeSession,
-          },
-          source: 'background',
-        };
-      }
+      const activeSession = await SessionStorage.get<string>('activeSession');
+      if (activeSession)
+        return new BackgroundBaseMessage('session-active', { platform });
+
+      const activeTabState = await orchestrator.sendMessageToActiveTab(
+        new BackgroundBaseMessage('watching', { platform }),
+      );
+
+      const watching = activeTabState?.watching;
+      if (!watching) return new BackgroundBaseMessage('not-ready');
+
+      return new BackgroundBaseMessage('ready', { platform });
     } catch (error) {
-      console.error('Error getting state:', error);
-      return {
-        type: 'unknown-error',
-        payload: {},
-        source: 'background',
-      };
+      console.error(error);
+      return new BackgroundBaseMessage('unknown-error', error);
     }
   },
 };
+
+async function checkPlatformCompatibility(): Promise<string | null> {
+  try {
+    const activeTabResponse = await orchestrator.sendMessageToActiveTab({
+      type: 'get-hostname',
+      source: 'background',
+    });
+
+    const hostname = activeTabResponse?.hostname;
+
+    if (!hostname) return null;
+
+    const platform = ASSISTE_COMIGO_PLATFORMS.find((platform) =>
+      hostname.includes(platform),
+    );
+
+    if (!platform) return null;
+
+    return platform;
+  } catch (error) {
+    // let errorMessage: string;
+    // if (error instanceof Error) {
+    //   errorMessage = error.message;
+    // } else {
+    //   errorMessage = String(error);
+    // }
+    // console.log(errorMessage);
+    // if (
+    //   errorMessage ===
+    //   'Could not establish connection. Receiving end does not exist.'
+    // ) {
+    //   return null;
+    // }
+    return null;
+  }
+}

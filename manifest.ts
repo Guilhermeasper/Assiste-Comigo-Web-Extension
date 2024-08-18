@@ -9,11 +9,11 @@ export default {
   content_scripts: [
     {
       js: ['./content.js'],
-      matches: ['https://*/*'],
+      matches: ['https://*.youtube.com/*'],
       run_at: 'document_end',
     },
   ],
-  permissions: ['storage'],
+  permissions: ['storage', 'scripting', 'activeTab'],
   background: {
     service_worker: './background.js',
   },

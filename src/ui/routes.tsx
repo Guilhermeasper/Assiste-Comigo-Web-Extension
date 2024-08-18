@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import App from './app';
+import Start from './start';
 import NotFound from './not-found';
 import CreateSession from './create-session';
 import Error from './error';
@@ -8,11 +8,11 @@ import InsideSession from './in-session';
 export const router = createBrowserRouter([
   {
     path: '/index.html',
-    element: <App />,
+    element: <Start />,
   },
   {
     path: '/',
-    element: <App />,
+    element: <Start />,
   },
   {
     path: '/create',

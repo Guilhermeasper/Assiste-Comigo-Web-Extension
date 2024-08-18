@@ -4,7 +4,7 @@ import { Orchestrator } from '@shared/orchestrator';
 import { useNavigate } from 'react-router-dom';
 import { AssisteComigoMessage } from '@shared/types/message.type';
 
-function App() {
+function Start() {
   const navigate = useNavigate();
 
   const orchestrator = Orchestrator.getInstance();
@@ -16,7 +16,7 @@ function App() {
     const type = response?.type;
     if (type === 'ready') {
       navigate('/create', {
-        state: { platform: response.payload.platform },
+        state: { platform: response.payload?.platform },
       });
     } else if (type == 'not-ready') {
       navigate('/error', {
@@ -24,7 +24,7 @@ function App() {
       });
     } else if (type === 'session-active') {
       navigate('/in-session', {
-        state: { platform: response.payload.platform },
+        state: { platform: response.payload?.platform },
       });
     } else if (type == 'unsupported-platform') {
       navigate('/error', {
@@ -58,4 +58,4 @@ function App() {
   );
 }
 
-export default App;
+export default Start;
